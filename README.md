@@ -20,15 +20,21 @@ This recursively updates all of the submodules as defined in `.gitmodules` to th
 
 If we want all submodules checked out to a branch, we have to update the `branch` flag in `.gitmodules` and also let the super project know to use the branched versions of the submodules
 
-1. Change the branch name in .gitmodules for all branches, to `branch-a`
+1. Change the branch name in .gitmodules for all branches, to `branch-e`
 
-    git submodule foreach -q --recursive 'git config -f $toplevel/.gitmodules submodule.$path.branch branch-a'
+    git submodule foreach -q --recursive 'git config -f $toplevel/.gitmodules submodule.$path.branch branch-e'
+    
+2. Create the required branch for all submodules (if it doesn't already exist)
 
-2. Update all submodules to the latest commit of the new branch
+    git submodule foreach --recursive 'git branch -f branch-e'
+
+3. Update all submodules to the latest commit of the new branch
 
     git submodule update --init --recursive --remote
 
+4. Create super project branch and checkout
 
+    git checkout -B branch-e
 
 
 1. Checkout all submodules to a particular branch.  Will create if not exists

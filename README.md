@@ -1,5 +1,5 @@
 Git Submodules
---------------
+==============
 
 Add Submodule tracked to it's master branch
 
@@ -20,31 +20,62 @@ This recursively updates all of the submodules as defined in `.gitmodules` to th
 
 If we want all submodules checked out to a branch, we have to update the `branch` flag in `.gitmodules` and also let the super project know to use the branched versions of the submodules
 
-1. Change the branch name in .gitmodules for all branches, to `branch-a`
+1. Change the branch name in .gitmodules for all branches, to `some-branch`
+------------------------------------------------------------------------
 
-    git submodule foreach -q --recursive 'git config -f $toplevel/.gitmodules submodule.$path.branch branch-a'
+    git submodule foreach -q --recursive 'git config -f $toplevel/.gitmodules submodule.$path.branch some-branch'
+    
+This affectively tells the super project what branch needs to be tracked for each submodule.  This obviously can be master.  Will pull in the latest commit from said branch, to the project.
+    
+`-q` flag denotes that the operation on each submodule be silent.  Omitting this will print to standard out the module name before each operation.
 
-2. Update all submodules to the latest commit of the new branch
+`-recursive` denotes that submodules are traversed recursively (i.e. the given shell command is evaluated in nested submodules as well).
+    
+2. Create the required branch for all submodules (if it doesn't already exist)
+------------------------------------------------------------------------------
+
+    git submodule foreach --recursive 'git branch -f some-branch'
+    
+Iterates through each of the submodules, creating the required branch (if it doesn't exist)
+
+3. Update all submodules to the latest commit of the new branch
+---------------------------------------------------------------
 
     git submodule update --init --recursive --remote
-
-
-
-
-1. Checkout all submodules to a particular branch.  Will create if not exists
-
-    git submodule foreach -q --recursive 'git checkout -B branch-name'
     
+Updates all of the submodules.  This happens according to the `[submodule]` config in `.gitmodules`.  
 
-2. Checkout all submodules to the branch:
+`--init` ensures the submodule is initialized in the super project.
+`--recursive` ensures that all submodules - including nested modules - are updated.
+`--remote` required as we're tracking a branch
 
-    git submodule foreach -q --recursive 'branch="$(git config -f $topLevel/.gitmodules submodule.$name.branch)"; git checkout $branch'
+
+4. Create super project branch and checkout
+-------------------------------------------
+
+    git checkout -B some-branch
+    
+Checks out the required branch for the super project.
+
+`-B` creates the branch if it doesn't exist.
+
+Is transactionally equivalent to doing:
+
+    git branch -f some-branch
+    git checkout some-branchgit -version
     
     
+5. Recursively push the project
+-------------------------------
+
+    git push --recurse-submodules=on-demand
     
-git config --file=.gitmodules --get-regexp ^^submodule.*\.url$ | cut -d " "
+Pushes all changes - super project and all submodules - from the super project.
+ 
+> Make sure all submodule commits used by the revisions to be pushed are available on a remote tracking branch.
 
 
-Change .gitmodules branch for certain submodule
+Git Hooks
+=========
 
-    git config -f .gitmodules submodule.$path.branch brancgith-a
+

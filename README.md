@@ -1,6 +1,46 @@
 Git Submodules
 ==============
 
+[Edit] Tried and tested versions
+--------------------------------
+
+Checkout/create branch on super project
+
+    git checkout -b origin/1-branch
+    
+Push the super branch setting the upstream 
+
+    git push -u origin origin/1-branch
+    
+Checkout/create the same branch on all submodules
+
+    git submodule foreach --recursive 'git checkout -b origin/1-branch'
+    
+And push the new submodule branches to remote
+
+    git submodule foreach -q --recursive 'git push origin origin/1-branch'
+    
+Updates the .gitmodules reference for each submodule to the branch we want to track
+
+    git submodule foreach -q --recursive 'git config -f $toplevel/.gitmodules submodule.$path.branch origin/1-branch'
+    
+Add/Commit the changed .gitmodules
+
+    git add .gitmodules && git commit -m "updated .gitmodules"
+    
+And update the submodules in the project to the latest of the specified branch
+
+    git submodule update --init --recursive --remote
+    
+**NB// until actually changes have been added/committed to a submodule, and the pointer in the super project also committed, the pointer will remain on the previous branch**
+
+[END]
+--------------------------------
+
+
+
+
+
 Add Submodule tracked to it's master branch
 
     git submodule add -b master https://github.com/jamiehill/submodule-b.git

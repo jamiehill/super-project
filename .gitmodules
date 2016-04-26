@@ -1,8 +1,8 @@
 [submodule "submodule-a"]
 	path = submodule-a
 	url = https://github.com/jamiehill/submodule-a.git
-	branch = some-branch
+	branch = master
 [submodule "submodule-b"]
 	path = submodule-b
 	url = https://github.com/jamiehill/submodule-b.git
-	branch = some-branch
+	branch = master

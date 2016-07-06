@@ -36,7 +36,7 @@ Pushes any changes to the submodules
 
      git push --recurse-submodules=on-demand
      
- **To do this automatcially with a normal `git push` add the following git config setting:
+ **To do this automatcially with a normal `git push` add the following git config setting:**
  
     git config push.recurseSubmodules on-demand
     

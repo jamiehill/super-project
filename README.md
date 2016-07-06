@@ -32,6 +32,10 @@ And update the submodules in the project to the latest of the specified branch
 
     git submodule update --init --recursive --remote
     
+Pushes any changes to the submodules
+
+     git push --recurse-submodules=on-demand
+    
 **NB// until actually changes have been added/committed to a submodule, and the pointer in the super project also committed, the pointer will remain on the previous branch**
 
 [END]
